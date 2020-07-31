@@ -14,6 +14,7 @@ function asyncHandler(cb){
   }
 }
 
+
 /* GET the full list of books */
 router.get('/', asyncHandler(async (req, res) => {
   const books = await Book.findAll();
@@ -22,12 +23,21 @@ router.get('/', asyncHandler(async (req, res) => {
 
 /* GET the create new book form */
 router.get('/new', asyncHandler(async (req, res) => {
-  //res.render();
+  res.render("books/new-book");
 }));
 
 /* POST a new book to the database */
 router.post('/new', asyncHandler(async (req, res) => {
-  //res.render();
+  let book;
+  try {
+    book = await Book.create(req.body);
+    res.redirect('/')
+  } catch(error) {
+    if(error.name == 'SequelizeValidationError') {
+      book = await Book.build(req.body);
+    }
+    res.render("books/new-book", { book, error })
+  }
 }));
 
 /* GET a specific book from the database */
@@ -39,7 +49,9 @@ router.get('/:id', asyncHandler(async (req, res) => {
 
 /* GET the form to update specific book information to the database */
 router.get('/:id/edit', asyncHandler(async (req, res) => {
-  //res.render();
+  const book = await Book.findByPk(req.params.id);
+  console.log(book.title)
+  res.render("books/update-book", {book});
 }));
 
 /* POST updated information about a specific book to the database */

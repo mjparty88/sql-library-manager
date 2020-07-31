@@ -17,7 +17,10 @@ class Book extends Sequelize.Model {}
       validate: {
         notNull: {
           msg: "The title of the book is required"
-        }
+        },
+        notEmpty: {
+          msg: "The title of the book is required"
+        } //prevents empty strings being added
       }
     },
     author: {
@@ -26,7 +29,10 @@ class Book extends Sequelize.Model {}
       validate: {
         notNull: {
           msg: "The author of the book is required"
-        }
+        },
+        notEmpty: {
+          msg: "The author of the book is required"
+        }  //prevents empty strings being added
       }
     },
     genre: Sequelize.STRING,
