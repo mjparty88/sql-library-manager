@@ -2,9 +2,9 @@ extends ../layout
 
 block content
   link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Bree+Serif|Open+Sans:400,700')
-  link(rel='stylesheet', href='../static/stylesheets/style.css')
+  link(rel='stylesheet', href='/static/stylesheets/style.css')
   title Books
-  body
+  include search
   h1 Books
   p
     a(href="/books/new", class="button") Create New Book

@@ -95,3 +95,13 @@ input[type=text] {
 .error {
   color: rgb(236, 15, 15);
 }
+
+/*Custom styles*/
+
+#delete {
+  background-color: rgb(236, 15, 15);
+}
+
+#back {
+  background-color: rgba(67,67,67);
+}

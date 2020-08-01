@@ -1,6 +1,7 @@
 extends ../layout
 
 block content
-  div
-    p #{error.name}
-    p #{error.message}
+  h2.error Ooooops!
+  ul.error
+    each err in error.errors
+      li=err.message

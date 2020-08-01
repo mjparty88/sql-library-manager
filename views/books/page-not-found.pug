@@ -1,0 +1,19 @@
+extends ../layout
+
+block content
+  link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Bree+Serif|Open+Sans:400,700')
+  link(rel='stylesheet', href='../../static/stylesheets/style.css')
+  if err.status == 404
+    title Page Not Found
+    h1 404 - Page Not Found
+    p Sorry! We couldn't find the page you were looking for
+    br
+    p
+    a.button(href='.') Home
+  else
+    title Server Error
+    h1 500 - Server Error
+    p Something went wrong at our end.
+    br
+    p
+    a.button(href='.') Home
