@@ -3,7 +3,7 @@ extends ../layout
 block content
   div.search
     p Use text to search by title, author, or genre. 
-    p Use numbers to search for books in a publish year.
+    p Use numbers to search for books published in a certain year.
     p Select the "search/clear" button when the field empty to return all results.
     form(method="post" action='/books/search')
       label(for="searchString") Search

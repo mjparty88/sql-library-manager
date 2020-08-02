@@ -15,4 +15,8 @@ I have changed the process to edit and deleting books from the base rubric. Sele
 
 In order to edit or delete information about the book, the user must first select the 'edit' button from within the 'books/book' view. Doing sp renders the 'books/update-book' view with form input fields enabled. The user will be able to edit, save, and delete the record from this view.
 
-This has been done to add additional protection to the information in the library database. Minor adjustments to styles have also been made to visually indicate the actions associated with the buttons (i.e. red for delete).  
+This has been done to add additional protection to the information in the library database. Minor adjustments to styles have also been made to visually indicate the actions associated with the buttons (i.e. red for delete).
+
+The search form implements a SELECT query WHERE the value of the search field is LIKE title OR LIKE author OR LIKE Fantasy, OR (in the case that a year is inputted - i.e. '1997') is equal to the published year. Searching for an empty string clears the additional conditions on the SELECT query.
+
+Pagination works for with search criteria and without search criteria.
