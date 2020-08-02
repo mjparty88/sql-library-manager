@@ -1,0 +1,8 @@
+extends ../layout
+
+block content
+  ul.pages
+    each page in pages
+      li
+        p
+          a(href=`${page.hrefLink}` class="button") #{page.pageNo}

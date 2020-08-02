@@ -26,11 +26,50 @@ function notFound(res, err) {
   res.render("books/page-not-found", {err})
 }
 
+/* calcPagination() function
+- takes an object containing books as an argument, plus the request that called the function
+- calculates the number of pagination links to return and store in numPages
+- if numPages is greater than one, add push onto an pages array
+- otherwise, set the pages array to undefined
+- return the pages array
+*/
+async function calcPagination(booksObj, req) {
+  let pages = [];
+  let count = 0;
+  for (bookObj in booksObj) {
+    count += 1;
+  }
+  const numPages = Math.ceil(count / 10);
+  if(numPages > 1) {
+    for(let i = 0; i < numPages; i++) {
+      if(req.originalUrl.includes("search")) {
+        pages.push({
+          pageNo: i+1,
+          hrefLink: `/books/search/${req.params.string}/page/${i+1}`
+        });
+      } else {
+        pages.push({
+          pageNo: i+1,
+          hrefLink: `/books/page/${i+1}`
+        })
+      }
+
+    }
+  } else {
+    pages = undefined;
+  }
+  return pages;
+}
+
 
 /*Middleware routes*/
 
 /* GET the full list of books */
 router.get('/', asyncHandler(async (req, res) => {
+  //implement the pages
+  const totalBooks = await Book.findAll();
+  const pages = await calcPagination(totalBooks, req);
+  //console.log(pages)
   const books = await Book.findAll({
     limit: 10, // limiting for pagination
     order: [ //returning the books by author (alphabetical), and then year
@@ -38,23 +77,41 @@ router.get('/', asyncHandler(async (req, res) => {
       ['year', 'ASC']
     ]
   });
-  res.render("books/index", {books});
+  res.render("books/index", {books, pages});
+}));
+
+/* GET the results of each page link */
+
+router.get('/page/:pageid', asyncHandler(async (req, res) => {
+  //implement the pages
+  const totalBooks = await Book.findAll();
+  const pages = await calcPagination(totalBooks, req);
+  //console.log(pages)
+  const books = await Book.findAll({
+    limit: 10, // limiting for pagination
+    offset: (req.params.pageid - 1) * 10, // set the offset by pageid
+    order: [ //returning the books by author (alphabetical), and then year
+      ['author', 'ASC'],
+      ['year', 'ASC']
+    ]
+  });
+  res.render("books/index", {books, pages});
 }));
 
 /* POST a search result on the main page*/
-router.post('/', asyncHandler(async (req, res) => {
+router.post('/search', asyncHandler(async (req, res) => {
   const searchString = req.body.searchString;
   if(req.body.searchString == ''){
     res.redirect('/books');
   } else {
-    res.redirect(`books/search/${searchString}`)
+    res.redirect(`/books/search/${searchString}`)
     }
 }));
 
 /* GET the list of books that match the search criteria */
 router.get('/search/:string', asyncHandler(async (req, res) => {
   console.log("looking for books and authors like " + req.params.string)
-  const books = await Book.findAll({
+  const totalBooks = await Book.findAll({
     where: {
       [Op.or]: [ //search will be against either the title or author
         {
@@ -74,7 +131,79 @@ router.get('/search/:string', asyncHandler(async (req, res) => {
       ['year', 'ASC']
     ]
   });
-  res.render("books/index", {books});
+  const pages = await calcPagination(totalBooks, req);
+  const books = await Book.findAll({
+    where: {
+      [Op.or]: [ //search will be against either the title or author
+        {
+          title: {
+            [Op.like]: `%${req.params.string}%` //case insensitive like comparison on the title (SQLite implements LIKE as case-insensitive)
+          }
+        },
+        {
+          author: {
+            [Op.like]: `%${req.params.string}%` //case insensitive like comparison on the title (SQLite implements LIKE as case-insensitive)
+          }
+        }
+      ]
+    },
+    limit: 10, // limiting for pagination
+    order: [
+      ['author', 'ASC'],
+      ['year', 'ASC']
+    ]
+  });
+  res.render("books/index", {books, pages});
+}));
+
+/* GET the list of books that match the search criteria, and pagination*/
+
+router.get('/search/:string/page/:pageid', asyncHandler(async (req, res) => {
+  console.log("looking for books and authors like " + req.params.string)
+  const totalBooks = await Book.findAll({
+    where: {
+      [Op.or]: [ //search will be against either the title or author
+        {
+          title: {
+            [Op.like]: `%${req.params.string}%` //case insensitive like comparison on the title (SQLite implements LIKE as case-insensitive)
+          }
+        },
+        {
+          author: {
+            [Op.like]: `%${req.params.string}%` //case insensitive like comparison on the title (SQLite implements LIKE as case-insensitive)
+          }
+        }
+      ]
+    },
+    order: [
+      ['author', 'ASC'],
+      ['year', 'ASC']
+    ]
+  });
+  const pages = await calcPagination(totalBooks, req);
+  const books = await Book.findAll({
+    where: {
+      [Op.or]: [ //search will be against either the title or author
+        {
+          title: {
+            [Op.like]: `%${req.params.string}%` //case insensitive like comparison on the title (SQLite implements LIKE as case-insensitive)
+          }
+        },
+        {
+          author: {
+            [Op.like]: `%${req.params.string}%` //case insensitive like comparison on the title (SQLite implements LIKE as case-insensitive)
+          }
+        }
+      ]
+    },
+    limit: 10, // limiting for pagination
+    offset: (req.params.pageid - 1) * 10, // set the offset by pageid
+    order: [
+      ['author', 'ASC'],
+      ['year', 'ASC']
+    ]
+  });
+  res.render("books/index", {books, pages});
 }));
 
 /* GET the create new book form */
