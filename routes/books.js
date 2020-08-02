@@ -26,8 +26,8 @@ function notFound(res, err) {
   res.render("books/page-not-found", {err})
 }
 
-/* calcPagination() function
-- takes an object containing books as an argument, plus the request that called the function
+/* calcPagination()
+- takes an object containing books as an argument, as well as the request that called the function
 - calculates the number of pagination links to return and store in numPages
 - if numPages is greater than one, add push onto an pages array
 - otherwise, set the pages array to undefined
@@ -61,7 +61,7 @@ async function calcPagination(booksObj, req) {
   return pages;
 }
 
-/*Middleware routes*/
+/*MIDDLEWARE*/
 
 /* GET the full list of books */
 router.get('/', asyncHandler(async (req, res) => {
@@ -69,7 +69,6 @@ router.get('/', asyncHandler(async (req, res) => {
 }));
 
 /* GET the results of each page link */
-
 router.get('/page/:pageid', asyncHandler(async (req, res) => {
   //implement the pages
   const totalBooks = await Book.findAll();
@@ -102,25 +101,24 @@ router.get('/search/:string', asyncHandler(async (req, res) => {
 }));
 
 /* GET the list of books that match the search criteria, and pagination*/
-
 router.get('/search/:string/page/:pageid', asyncHandler(async (req, res) => {
-  console.log("looking for books and authors like " + req.params.string)
+  console.log("Searching in the database for " + req.params.string)
   const totalBooks = await Book.findAll({
     where: {
-      [Op.or]: [ //search will be against either the title or author
+      [Op.or]: [
         {
           title: {
-            [Op.like]: `%${req.params.string.trim()}%` //case insensitive like comparison on the title (SQLite implements LIKE as case-insensitive)
+            [Op.like]: `%${req.params.string.trim()}%`
           }
         },
         {
           author: {
-            [Op.like]: `%${req.params.string.trim()}%` //case insensitive like comparison on the title (SQLite implements LIKE as case-insensitive)
+            [Op.like]: `%${req.params.string.trim()}%`
           }
         },
         {
           genre: {
-            [Op.like]: `%${req.params.string.trim()}%` //case insensitive like comparison on the title (SQLite implements LIKE as case-insensitive)
+            [Op.like]: `%${req.params.string.trim()}%`
           }
         },
         {
@@ -138,25 +136,25 @@ router.get('/search/:string/page/:pageid', asyncHandler(async (req, res) => {
   const pages = await calcPagination(totalBooks, req);
   const books = await Book.findAll({
     where: {
-      [Op.or]: [ //search will be against either the title or author
+      [Op.or]: [
         {
           title: {
-            [Op.like]: `%${req.params.string.trim()}%` //case insensitive like comparison on the title (SQLite implements LIKE as case-insensitive)
+            [Op.like]: `%${req.params.string.trim()}%`
           }
         },
         {
           author: {
-            [Op.like]: `%${req.params.string.trim()}%` //case insensitive like comparison on the title (SQLite implements LIKE as case-insensitive)
+            [Op.like]: `%${req.params.string.trim()}%`
           }
         },
         {
           genre: {
-            [Op.like]: `%${req.params.string.trim()}%` //case insensitive like comparison on the title (SQLite implements LIKE as case-insensitive)
+            [Op.like]: `%${req.params.string.trim()}%`
           }
         },
         {
           year: {
-            [Op.eq]: req.params.string //case insensitive like comparison on the title (SQLite implements LIKE as case-insensitive)
+            [Op.eq]: req.params.string
           }
         }
       ]
