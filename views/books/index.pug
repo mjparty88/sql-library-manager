@@ -5,24 +5,30 @@ block content
   link(rel='stylesheet', href='/static/stylesheets/style.css')
   title Books
   include search
-  h1 Books
-  p
-    a(href="/books/new", class="button") Create New Book
-  table
-    thead
-      tr
-        th Title
-        th Author
-        th Genre
-        th Year
-    tbody
-    each book in books
-      tr
-        td
-          a(href=`/books/${book.id}`) #{book.title}
-        td #{book.author}
-        td #{book.genre}
-        td #{book.year}
+  if(books.length > 0)
+    h1 Books
+    p
+      a(href="/books/new", class="button") Create New Book
+    table
+      thead
+        tr
+          th Title
+          th Author
+          th Genre
+          th Year
+      tbody
+      each book in books
+        tr
+          td
+            a(href=`/books/${book.id}`) #{book.title}
+          td #{book.author}
+          td #{book.genre}
+          td #{book.year}
+  else
+    h1 Sorry
+    p There were no books to display
+    p
+      a(href="/books", class="button") Go Home
   if(pages)
     include paginate
       

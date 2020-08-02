@@ -2,10 +2,10 @@ extends ../layout
 
 block content
   div.search
-    p Search by either title or author. Hit search with the field empty to return all results.
+    p Search by either title, author, or genre. Select the "search/clear" button when the field empty to return all results.
     form(method="post" action='/books/search')
       label(for="searchString") Search
       input(name="searchString" type="text")
       p
-        input(type="submit" value='Search')
+        input(type="submit" value='Search / Clear')
       
