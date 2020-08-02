@@ -7,6 +7,10 @@ Dependencies:
 -Express
 -Pug
 
+To run, clone the git repository, navigate to the project folder, and enter 'npm start'.
+
+Notes:
+
 I have changed the process to edit and deleting books from the base rubric. Selecting on a book in the library will open the 'books/book' view (which I've made as a read-only screen with form input fields disabled.
 
 In order to edit or delete information about the book, the user must first select the 'edit' button from within the 'books/book' view. Doing sp renders the 'books/update-book' view with form input fields enabled. The user will be able to edit, save, and delete the record from this view.
